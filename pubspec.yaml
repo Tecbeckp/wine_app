@@ -40,7 +40,6 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.56
   delayed_display: ^2.0.0
   intl: ^0.17.0
-  lottie: ^2.3.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
