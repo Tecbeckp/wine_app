@@ -3,17 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'common_widgets/page_transition.dart';
 import 'controllers/general_controller.dart';
-import 'helpers/commonDialogBox.dart';
-import 'helpers/constants.dart';
-
 
 
 
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key});
 
@@ -45,6 +42,7 @@ class _MyAppState extends State<MyApp> {
 
         return GetMaterialApp(
           title: 'BORDEAUX',
+          // title: 'BORDEAUX',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
