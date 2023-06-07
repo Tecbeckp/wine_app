@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "839954240661",
+    "project_id": "bordeaux-23b80",
+    "storage_bucket": "bordeaux-23b80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839954240661:android:9b042bd31f890d58d0379c",
+        "android_client_info": {
+          "package_name": "com.bordeaux.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839954240661-4i9ula2lg4eurffjbe8fl3o6g46rvb8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjgRW5aruQ_In1J39AT-S-kE3CA2v8yQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839954240661-4i9ula2lg4eurffjbe8fl3o6g46rvb8o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

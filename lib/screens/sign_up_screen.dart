@@ -1,6 +1,7 @@
-
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
@@ -8,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../common_widgets/colors.dart';
 import '../common_widgets/common_loader.dart';
 import '../helpers/constants.dart';
+import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -421,19 +423,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(13),
-                                          child: loader == true
-                                              ? Center(child: CommonLoader())
-                                              : Text(
-                                                  'Sign Up',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 19,
-                                                    fontFamily: 'InterMedium',
+                                      child: InkWell(
+                                        onTap: () async {
+                                          if (signUpFormField.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              loader = true;
+                                            });
+                                            await registerUser(
+                                                emailController.text,
+                                                passwordController.text,
+                                                nameController.text,
+                                                phoneNumberController.text);
+                                          }
+                                        },
+                                        child: Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(13),
+                                            child: loader == true
+                                                ? Center(child: CommonLoader())
+                                                : const Text(
+                                                    'Sign Up',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 19,
+                                                      fontFamily: 'InterMedium',
+                                                    ),
                                                   ),
-                                                ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -459,4 +476,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  registerUser(emails, pass, name, phoneNumber) async {
+    try {
+      UserCredential user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: emails, password: pass);
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+      if (user != null) {
+        FirebaseFirestore.instance.collection('users').doc(user.user!.uid).set({
+          'email': emails,
+          'displayName': name,
+          'id': user.user!.uid,
+          'phoneNUmber': phoneNumber,
+          'freeSearchCounter': 0,
+          'imageUrl': "",
+          'FcmToken': fcmToken.value,
+        });
+        setState(() {
+          loader = false;
+        });
+
+        return AwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          desc: 'Successfully registered,\n Please Log in ',
+          btnOkOnPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ));
+          },
+        ).show();
+      }
+    } catch (error) {
+      setState(() {
+        loader = false;
+      });
+      return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        btnOkOnPress: () {},
+        desc: '${error.toString().replaceRange(0, 14, '').split(']')[1]}',
+      ).show();
+    }
+  }
 }

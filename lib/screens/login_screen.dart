@@ -1,9 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bordeaux/screens/home_screen.dart';
 import 'package:bordeaux/screens/sign_up_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:sizer/sizer.dart';
 
 import '../common_widgets/colors.dart';
@@ -24,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> signInFormField = GlobalKey();
-
 
   _divider() {
     return const SizedBox(height: 15);
@@ -60,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -117,13 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Welcome back, Please enter your details.',
-                                          style: TextStyle(
-
-                                              fontSize: 8.sp),
+                                          style: TextStyle(fontSize: 8.sp),
                                         )
                                       ],
                                     ),
@@ -131,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                     ),
                                     SizedBox(
-
                                       child: TextFormField(
                                         controller: emailController,
                                         validator: (val) =>
@@ -188,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                     ),
                                     SizedBox(
-
                                       child: TextFormField(
                                         controller: passwordController,
                                         validator: (value) {
@@ -251,7 +246,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        PageTransition.fadeInNavigation(page: HomeScreen());
+                                        PageTransition.fadeInNavigation(
+                                            page: HomeScreen());
                                       },
                                       child: Container(
                                         width: 90.w,
@@ -263,16 +259,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Center(
                                           child: Padding(
                                             padding: EdgeInsets.all(13),
-                                            child:
-
-                                                 Text(
-                                                    'Sign In',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 17,
-                                                      fontFamily: 'InterMedium',
-                                                    ),
-                                                  ),
+                                            child: Text(
+                                              'Sign In',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                                fontFamily: 'InterMedium',
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -281,8 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
                                           'Forgot password?',
@@ -299,14 +292,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     SizedBox(
                                       height: 10,
                                     ),
-
                                     Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         InkWell(
-                                          onTap: (){
-                                            PageTransition.fadeInNavigation(page: SignUpScreen());
+                                          onTap: () {
+                                            PageTransition.fadeInNavigation(
+                                                page: SignUpScreen());
                                           },
                                           child: Text(
                                             'Don’t have an account? Signup',
@@ -324,18 +316,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    Row(mainAxisAlignment: MainAxisAlignment.center,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                       Container(
-                                         width: 36.w,
-                                         height: 0.5,
-                                         color: Colors.black,
-                                       ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 5,right: 5),
-                                          child: Text('Or',style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Container(
+                                          width: 36.w,
+                                          height: 0.5,
+                                          color: Colors.black,
                                         ),
-
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 5, right: 5),
+                                          child: Text(
+                                            'Or',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
                                         Container(
                                           width: 36.w,
                                           height: 0.5,
@@ -343,57 +341,84 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ],
                                     ),
-SizedBox(
-  height: 20,
-),
-                                    Row(mainAxisAlignment: MainAxisAlignment.center,
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                         decoration: BoxDecoration(
-
-                                           borderRadius: BorderRadius.circular(5),
-                                           border: Border.all(
-                                             color: Colors.grey.withOpacity(0.3)
-                                           )
-                                         ),
-                                         child: Padding(
-                                           padding: const EdgeInsets.only(top: 12,bottom: 12,right: 7,left: 7),
-                                           child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                                             children: [
-                                               Image.asset('assets/images/google.png',height: 17,width: 17,),
-                                               SizedBox(
-                                                 width: 5,
-                                               ),
-                                               Text('Log in with google',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 8.sp,),)
-
-
-                                             ],
-                                           ),
-                                         ),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.3))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 12,
+                                                bottom: 12,
+                                                right: 7,
+                                                left: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  'assets/images/google.png',
+                                                  height: 17,
+                                                  width: 17,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Log in with google',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 8.sp,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                         SizedBox(
                                           width: 10,
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-
-                                              borderRadius: BorderRadius.circular(5),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
                                               border: Border.all(
-                                                  color: Colors.grey.withOpacity(0.3)
-                                              )
-                                          ),
+                                                  color: Colors.grey
+                                                      .withOpacity(0.3))),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(top: 12,bottom: 12,right: 7,left: 7),
-
-                                            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                                            padding: const EdgeInsets.only(
+                                                top: 12,
+                                                bottom: 12,
+                                                right: 7,
+                                                left: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                Image.asset('assets/images/facebook_login.png',height: 14,width: 17,),
+                                                Image.asset(
+                                                  'assets/images/facebook_login.png',
+                                                  height: 14,
+                                                  width: 17,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Text('Log in with facebook',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 8.sp,),)
-
-
+                                                Text(
+                                                  'Log in with facebook',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 8.sp,
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -419,5 +444,67 @@ SizedBox(
     );
   }
 
+  validateUser(email, password) async {
+    try {
+      UserCredential user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      userDocId.value = user.user!.uid;
 
+      // saveUserData(userID: userDocId.value);
+      // setUserLoggedIn(true);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.user!.uid)
+          .get()
+          .then((value) async {
+        setState(() {
+          userData = UserModel.fromDocument(value.data());
+          EmailConst.value = value.data()!['email'];
+          NameConst.value = value.data()!['displayName'];
+          profileUrlConst.value = value.data()!['imageUrl'];
+        });
+
+        setState(() {
+          loggedInGlobal.value = true;
+          loader = false;
+        });
+        return AwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          btnOkOnPress: () {
+            setState(() {
+              loggedInGlobal.value = true;
+            });
+            PageTransition.fadeInNavigation(page: const HomeScreen());
+          },
+          desc: 'Successfully LoggedIn...',
+        ).show();
+      });
+      setState(() {
+        loader = false;
+      });
+      // return AwesomeDialog(
+      //   context: context,
+      //   dialogType: DialogType.success,
+      //   btnOkOnPress: () {
+      //     setState(() {
+      //       loggedInGlobal.value = true;
+      //     });
+      //     PageTransition.fadeInNavigation(page: const HomeScreen());
+      //   },
+      //   desc: 'Successfully LoggedIn...',
+      // ).show();
+    } catch (error) {
+      setState(() {
+        loader = false;
+      });
+
+      return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        btnOkOnPress: () {},
+        desc: '${error.toString().replaceRange(0, 14, '').split(']')[1]}',
+      ).show();
+    }
+  }
 }
