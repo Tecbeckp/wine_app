@@ -1,14 +1,14 @@
-
 import 'package:bordeaux/screens/age_verification.dart';
 import 'package:bordeaux/screens/profile_screen.dart';
 import 'package:bordeaux/screens/search_pages.dart';
+import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:sizer/sizer.dart';
-import '../RestApi.dart';
+
 import '../common_widgets/colors.dart';
 import '../common_widgets/common_loader.dart';
 import '../common_widgets/common_widgets.dart';
@@ -123,8 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InkWell(
-                            onTap: (){
-                              PageTransition.fadeInNavigation(page: ProfileScreen());
+                            onTap: () {
+                              PageTransition.fadeInNavigation(
+                                  page: ProfileScreen());
                             },
                             child: Row(
                               children: [
@@ -140,8 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 10,
                                 ),
                                 InkWell(
-                                  onTap: (){
-                                    Get.to(()=>AgeVerification());
+                                  onTap: () {
+                                    Get.to(() => AgeVerification());
                                   },
                                   child: Text(
                                     'BORDEAUX',
@@ -157,57 +158,46 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Row(
                             children: [
-
-                                   InkWell(
-                                     onTap:(){
-                                       showModalBottomSheet(
-                                           isScrollControlled: true,
-                                           context: context,
-                                           shape:
-                                           const RoundedRectangleBorder(
-                                             // <-- SEE HERE
-                                             borderRadius:
-                                             BorderRadius.vertical(
-                                               top: Radius.circular(15.0),
-                                             ),
-                                           ),
-                                           builder: (context) {
-                                             return Wrap(children: [
-                                               StatefulBuilder(builder:
-                                                   (BuildContext context,
-                                                   StateSetter
-                                                   setState) {
-                                                 return const ChattingView();
-                                               }),
-                                             ]);
-                                           });
-
-
-
-
-
-                                     },
-                                     child: Image.asset(
-                                       'assets/images/chatbot.png',
-                                       height: 27,
-                                       width: 27,
-                                     ),
-                                   ),
-
+                              InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        // <-- SEE HERE
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(15.0),
+                                        ),
+                                      ),
+                                      builder: (context) {
+                                        return Wrap(children: [
+                                          StatefulBuilder(builder:
+                                              (BuildContext context,
+                                                  StateSetter setState) {
+                                            return const ChattingView();
+                                          }),
+                                        ]);
+                                      });
+                                },
+                                child: Image.asset(
+                                  'assets/images/chatbot.png',
+                                  height: 27,
+                                  width: 27,
+                                ),
+                              ),
                               const SizedBox(
                                 width: 20,
                               ),
-                               GestureDetector(
-                                      onTap: () {
-                                        scaffoldKey.currentState!
-                                            .openEndDrawer();
-                                      },
-                                      child: Image.asset(
-                                        'assets/images/drawer.png',
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                    ),
+                              GestureDetector(
+                                onTap: () {
+                                  scaffoldKey.currentState!.openEndDrawer();
+                                },
+                                child: Image.asset(
+                                  'assets/images/drawer.png',
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              ),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -498,61 +488,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                               BorderRadius.circular(7.0),
                                         ),
                                         child: InkWell(
-                                          onTap: ()  {
-
+                                          onTap: () {
+                                            gptResponse();
                                             if (dropdownFieldController
                                                 .text.isNotEmpty) {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              PageTransition
-                                                  .fadeInNavigation(
+                                              PageTransition.fadeInNavigation(
                                                   page: SearchPages(
-                                                    symptom:
+                                                symptom:
                                                     symptomsController.text,
-                                                    selectedTypes:
-                                                    selectedValues,
-                                                  ));
+                                                selectedTypes: selectedValues,
+                                              ));
                                               setState(() {
                                                 isLoading = false;
                                               });
                                             } else {
-                                              setState(()  {
+                                              setState(() {
                                                 for (int i = 0;
-                                                i <
-                                                    dropDownImages
-                                                        .length;
-                                                i++) {
-                                                  selectedValues.add(
-                                                      dropDownTitles[i]);
+                                                    i < dropDownImages.length;
+                                                    i++) {
+                                                  selectedValues
+                                                      .add(dropDownTitles[i]);
                                                   herbsCheck[i] = true;
-                                                  dropdownFieldController
-                                                      .text =
-                                                      selectedValues
-                                                          .join(',');
+                                                  dropdownFieldController.text =
+                                                      selectedValues.join(',');
                                                 }
                                                 setState(() {
                                                   isLoading = true;
                                                 });
 
-                                                PageTransition
-                                                    .fadeInNavigation(
+                                                PageTransition.fadeInNavigation(
                                                     page: SearchPages(
-                                                      symptom:
-                                                      symptomsController
-                                                          .text,
-                                                      selectedTypes:
-                                                      selectedValues,
-                                                    ));
+                                                  symptom:
+                                                      symptomsController.text,
+                                                  selectedTypes: selectedValues,
+                                                ));
                                                 setState(() {
                                                   isLoading = false;
                                                 });
                                               });
                                             }
-
-
-
-
                                           },
                                           child: isLoading
                                               ? const Center(
@@ -611,7 +588,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           PageTransition.fadeInNavigation(
                                               page: const LoginScreen());
                                         }),
-                                   TextSpan(
+                                  TextSpan(
                                       text: ' for your medical records.',
                                       style: TextStyle(
                                         fontSize: 11.sp,
@@ -633,6 +610,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  gptResponse() async {
+    //OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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'; //4
+    if (kDebugMode) {
+      print(
+        "Write down the best 'idea' food and recipes in list form to cure my 'symptoms' with exact preparation time, cook time, # of calories",
+      );
+    }
+    final chatCompletion = await OpenAI.instance.chat.create(
+      //model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
+      messages: [
+        OpenAIChatCompletionChoiceMessageModel(
+          content:
+              "Write down the best 'idea' food and recipes in list form to cure my 'symptoms' with exact preparation time, cook time, # of calories",
+          // "Provide me the list and the description of '$idea' to overcome '$symptoms'",
+          // "Write down the best '$idea' food and recipes to cure my '$symptoms' with exact preparation time, cook time, # of calories",
+          role: OpenAIChatMessageRole.user,
+        ),
+      ],
+    );
+    var abc = chatCompletion.choices.first.message.content;
   }
 
   placesAutoCompleteTextField() {
@@ -708,8 +709,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/images/sparking.png',
     'assets/images/dessert.png',
   ];
-
-
 }
 
 class ChattingView extends StatefulWidget {
@@ -791,7 +790,7 @@ class _ChattingViewState extends State<ChattingView> {
                           'assets/images/chat_icon.png',
                           height: 30,
                           width: 30,
-                              color: AppColors.primary,
+                          color: AppColors.primary,
                         )),
                       ),
                     ],

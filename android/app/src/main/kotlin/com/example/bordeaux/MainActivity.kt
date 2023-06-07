@@ -1,4 +1,4 @@
-package com.example.bordeaux
+package com.bordeaux.app
 
 import io.flutter.embedding.android.FlutterActivity
 
