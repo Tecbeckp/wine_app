@@ -8,11 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../common_widgets/colors.dart';
-import '../common_widgets/common_loader.dart';
 import '../common_widgets/page_transition.dart';
 import '../helpers/constants.dart';
 import '../models/user_model.dart';
-import 'login_with_apple.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> signInFormField = GlobalKey();
-
+  bool loader = false;
   _divider() {
     return const SizedBox(height: 15);
   }

@@ -1,18 +1,18 @@
 import 'dart:io';
 
 import 'package:bordeaux/screens/profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:path/path.dart' as path;
 import 'package:sizer/sizer.dart';
 
 import '../common_widgets/colors.dart';
 import '../common_widgets/common_loader.dart';
 import '../common_widgets/global_variables.dart';
-import '../common_widgets/page_transition.dart';
 import '../common_widgets/texfield_input_decorations.dart';
 import '../helpers/constants.dart';
 import '../models/user_model.dart';
@@ -90,7 +90,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         InkWell(
                           onTap: () async {
                             Get.back();
-
                           },
                           child: Container(
                             child: Container(
@@ -109,7 +108,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         InkWell(
                           onTap: () async {
                             Get.back();
-
                           },
                           child: Container(
                               height: 40,
@@ -130,7 +128,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
   }
 
-
   var selectedimage;
   bool isLoading = false;
   late PickedFile _pickedFile;
@@ -141,7 +138,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? imageFile;
   final picker = ImagePicker();
   bool processingStatus = false;
+  FirebaseStorage storage = FirebaseStorage.instance;
+  XFile? pickedImage;
 
+  Future<void> _upload(String inputSource) async {
+    try {
+      pickedImage = await picker.pickImage(
+          source: inputSource == 'camera'
+              ? ImageSource.camera
+              : ImageSource.gallery,
+          maxWidth: 1920);
+      setState(() {
+        processingStatus = true;
+      });
+      final String fileName = path.basename(pickedImage!.path);
+      try {
+        // Uploading the selected image with some custom meta data
+        {
+          imageFile = File(pickedImage!.path);
+          await storage.ref(fileName).putFile(imageFile!).then((p0) async {
+            imageUrl = await p0.ref.getDownloadURL();
+            setState(() {});
+            if (p0.state == TaskState.success) {
+              setState(() {
+                processingStatus = false;
+              });
+            }
+          });
+        }
+        // Refresh the UI
+        setState(() {});
+      } on FirebaseException catch (error) {
+        if (kDebugMode) {
+          print(error);
+        }
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    }
+  }
 
   getData() {
     imageUrl = userData.imageUrl;
@@ -368,27 +405,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                          decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: isLoading
-                                ? const Center(child: CommonLoader())
-                                : Text(
-                                    'Update',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                          )
+                      InkWell(
+                        onTap: () async {
+                          if (editKey.currentState!.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await editProfile();
+                            setState(() {
+                              isLoading = false;
+                              Get.to(() => ProfileScreen());
+                            });
+                          }
+                        },
+                        child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: AppColors.primary,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: isLoading
+                                  ? const Center(child: CommonLoader())
+                                  : Text(
+                                      'Update',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                            )
 
-                          // Icon(Icons.check,size: 24,color: Colors.white,),
-                          ),
+                            // Icon(Icons.check,size: 24,color: Colors.white,),
+                            ),
+                      ),
                     ],
                   ),
                 ),
@@ -396,45 +447,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           ),
         ),
-        // bottomNavigationBar: Stack(
-        //   children: [
-        //
-        //     CustomPaint(
-        //     size: Size(100.w,190),
-        //     painter: CurvedPainterBottom(),
-        //   ),
-        //
-        //   Positioned(
-        //     top: 20,
-        //     child: SizedBox(
-        //       width: 100.w,
-        //       child: Padding(
-        //         padding: const EdgeInsets.only(left: 20,right: 20),
-        //         child: Row(mainAxisAlignment: MainAxisAlignment.end,
-        //           children: [
-        //
-        //             Container(
-        //
-        //               decoration: BoxDecoration(
-        //                 borderRadius: BorderRadius.all(Radius.circular(10)),
-        //                 color: AppColors.primary,
-        //               ),
-        //               child: Padding(
-        //                 padding: const EdgeInsets.all(8.0),
-        //                 child: Text('Update',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w600),),
-        //               )
-        //
-        //               // Icon(Icons.check,size: 24,color: Colors.white,),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        //   ]
-        // ),
       ),
     );
+  }
+
+  editProfile() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userDocId.value)
+        .update({
+      "displayName": nameController.text,
+      "phoneNUmber": phoneNumberController.text,
+      "imageUrl": imageUrl,
+      "address": addressController.text,
+      "bio": infoController.text
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userDocId.value)
+        .get()
+        .then((value) async {
+      setState(() {
+        userData = UserModel.fromDocument(value.data());
+        EmailConst.value = value.data()!['email'];
+        NameConst.value = value.data()!['displayName'];
+        profileUrlConst.value = value.data()!['imageUrl'];
+      });
+    });
   }
 
   Widget CommonSizeBox() {
@@ -442,11 +481,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       height: 20,
     );
   }
-
 }
 
-class PickedFile {
-}
+class PickedFile {}
 
 class CurvedPainterBottom extends CustomPainter {
   @override
