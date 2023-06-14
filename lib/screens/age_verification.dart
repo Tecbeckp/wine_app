@@ -1,29 +1,39 @@
+import 'package:bordeaux/screens/search_pages.dart';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../common_widgets/colors.dart';
 import '../common_widgets/page_transition.dart';
 
-
 class AgeVerification extends StatefulWidget {
-  const AgeVerification({Key? key}) : super(key: key);
+  final String symptom;
+  List<String> selectedTypes;
+  AgeVerification(
+      {Key? key, required this.symptom, required this.selectedTypes})
+      : super(key: key);
 
   @override
   State<AgeVerification> createState() => _AgeVerificationState();
 }
+
 final TextEditingController ageVerificationController = TextEditingController();
 TextEditingController dateinput = TextEditingController();
 
 final GlobalKey<FormState> ageVerificationFormFieldKey = GlobalKey();
 
 class _AgeVerificationState extends State<AgeVerification> {
+  var abc = DateTime.now();
+  var selectedDate;
   @override
   void initState() {
     ageVerificationController.text = ""; //set the initial value of text field
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +64,6 @@ class _AgeVerificationState extends State<AgeVerification> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -96,7 +105,7 @@ class _AgeVerificationState extends State<AgeVerification> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Age Verification',
@@ -114,13 +123,12 @@ class _AgeVerificationState extends State<AgeVerification> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'You must be 21 years old to access this website.\nPlease verify your age.',textAlign: TextAlign.center,
-                                          style: TextStyle(
-
-                                              fontSize: 9.sp),
+                                          'You must be 21 years old to access this website.\nPlease verify your age.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 9.sp),
                                         )
                                       ],
                                     ),
@@ -128,55 +136,75 @@ class _AgeVerificationState extends State<AgeVerification> {
                                       height: 20,
                                     ),
                                     SizedBox(
-
                                       child: TextFormField(
-                                        readOnly: true,  //set it true, so that user will not able to edit text
+                                        readOnly:
+                                            true, //set it true, so that user will not able to edit text
                                         onTap: () async {
-                                          DateTime? pickedDate = await showDatePicker(
-                                              context: context, initialDate: DateTime.now(),
-                                              builder: (BuildContext context, Widget? child) {
-                                                return Theme(
-                                                  data: Theme.of(context).copyWith(
-                                                    colorScheme: ColorScheme.light(
-                                                      primary: AppColors.primary, // header background color
-                                                      onPrimary: Colors.white, // header text color
-                                                      onSurface: Colors.black, // body text color
-                                                    ),
-                                                    textButtonTheme: TextButtonThemeData(
-                                                      style: TextButton.styleFrom(
-                                                        foregroundColor: Colors.red, // button text color
+                                          DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          Widget? child) {
+                                                    return Theme(
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                        colorScheme:
+                                                            ColorScheme.light(
+                                                          primary: AppColors
+                                                              .primary, // header background color
+                                                          onPrimary: Colors
+                                                              .white, // header text color
+                                                          onSurface: Colors
+                                                              .black, // body text color
+                                                        ),
+                                                        textButtonTheme:
+                                                            TextButtonThemeData(
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            foregroundColor: Colors
+                                                                .red, // button text color
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  child: child!,
-                                                );
-                                              },
-                                              firstDate: DateTime(1900), //DateTime.now() - not to allow to choose before today.
-                                              lastDate: DateTime(2101)
-                                          );
+                                                      child: child!,
+                                                    );
+                                                  },
+                                                  firstDate: DateTime(
+                                                      1900), //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
 
-                                          if(pickedDate != null ){
-                                            print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                                            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                            print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                                          if (pickedDate != null) {
+                                            if (kDebugMode) {
+                                              print(pickedDate);
+                                            } //pickedDate output format => 2021-03-10 00:00:00.000
+                                            var formattedDate =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(pickedDate);
+                                            selectedDate = DateTime
+                                                .fromMicrosecondsSinceEpoch(
+                                                    pickedDate
+                                                        .microsecondsSinceEpoch);
+                                            print(
+                                                formattedDate); //formatted date output using intl package =>  2021-03-16
                                             //you can implement different kind of Date Format here according to your requirement
 
                                             setState(() {
-                                              ageVerificationController.text = formattedDate; //set output date to TextField value.
+                                              ageVerificationController.text =
+                                                  formattedDate; //set output date to TextField value.
                                             });
-                                          }else{
+                                          } else {
                                             print("Date is not selected");
                                           }
                                         },
                                         controller: ageVerificationController,
-                                        validator: (val) =>
-                                        val!.isEmpty || !val.contains("@")
-                                            ? "enter a valid email"
-                                            : null,
                                         decoration: InputDecoration(
-                                          hintText: 'DD / MM / YY',
                                           labelText: 'DATE OF BIRTH',
-                                          prefixIcon: Icon(Icons.calendar_month,color: Colors.grey,),
+                                          prefixIcon: Icon(
+                                            Icons.calendar_month,
+                                            color: Colors.grey,
+                                          ),
                                           hintStyle: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               letterSpacing: 1.2,
@@ -195,7 +223,7 @@ class _AgeVerificationState extends State<AgeVerification> {
                                                     .withOpacity(0.2),
                                                 width: 1.5),
                                             borderRadius:
-                                            BorderRadius.circular(7),
+                                                BorderRadius.circular(7),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -203,15 +231,15 @@ class _AgeVerificationState extends State<AgeVerification> {
                                                     .withOpacity(0.2),
                                                 width: 1.5),
                                             borderRadius:
-                                            BorderRadius.circular(7),
+                                                BorderRadius.circular(7),
                                           ),
                                           errorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color:
-                                                Colors.red.withOpacity(0.8),
+                                                    Colors.red.withOpacity(0.8),
                                                 width: 1.5),
                                             borderRadius:
-                                            BorderRadius.circular(7),
+                                                BorderRadius.circular(7),
                                           ),
                                         ),
                                       ),
@@ -219,26 +247,37 @@ class _AgeVerificationState extends State<AgeVerification> {
                                     SizedBox(
                                       height: 40,
                                     ),
-
-
-                                    Container(
-                                      width: 90.w,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        borderRadius:
-                                        BorderRadius.circular(12.0),
-                                      ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(13),
-                                          child:
-
-                                          Text(
-                                            'Submit',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 17,
-                                              fontFamily: 'InterMedium',
+                                    InkWell(
+                                      onTap: () {
+                                        abc = abc.subtract(
+                                            const Duration(days: 7665));
+                                        if (selectedDate.isAfter(abc)) {
+                                          Get.back();
+                                        } else {
+                                          PageTransition.fadeInNavigation(
+                                              page: SearchPages(
+                                            symptom: widget.symptom,
+                                            selectedTypes: widget.selectedTypes,
+                                          ));
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 90.w,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary,
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(13),
+                                            child: Text(
+                                              'Submit',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                                fontFamily: 'InterMedium',
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -247,34 +286,36 @@ class _AgeVerificationState extends State<AgeVerification> {
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    Container(
-                                      width: 90.w,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary.withOpacity(0.3),
-                                        borderRadius:
-                                        BorderRadius.circular(12.0),
-                                      ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(13),
-                                          child:
-
-                                          Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                              color: AppColors.primary,
-                                              fontSize: 17,
-                                              fontFamily: 'InterMedium',
+                                    InkWell(
+                                      onTap: () {
+                                        Get.back();
+                                      },
+                                      child: Container(
+                                        width: 90.w,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary
+                                              .withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(13),
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: AppColors.primary,
+                                                fontSize: 17,
+                                                fontFamily: 'InterMedium',
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                   
                                     SizedBox(
                                       height: 20,
                                     ),
-
                                     SizedBox(
                                       height: 100.h < 670 ? 0 : 10,
                                     ),

@@ -1,18 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:image_picker/image_picker.dart';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
 import '../common_widgets/colors.dart';
 import '../common_widgets/common_loader.dart';
 import '../common_widgets/common_widgets.dart';
 import '../common_widgets/drawer.dart';
-import '../common_widgets/global_variables.dart';
-import '../common_widgets/page_transition.dart';
 import '../helpers/constants.dart';
 import 'edit_profile_screen.dart';
 
@@ -23,16 +18,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-
-
-
 class _ProfileScreenState extends State<ProfileScreen> {
-
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-
-
-
 
   //////////////health/////////
 
@@ -43,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool? value1;
 
   bool isLoader = false;
-  List<bool>showOptions=List.filled(4, false,growable: true);
+  List<bool> showOptions = List.filled(4, false, growable: true);
   getData() async {
     setState(() {
       isLoader = true;
@@ -55,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoader = false;
     });
   }
+
   List<_SalesData> data = [
     _SalesData('May 04', 0),
     _SalesData('May 05', 01),
@@ -129,7 +117,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Image.asset(
+                                          (userData.imageUrl != "" &&
+                                                  userData.imageUrl != null)
+                                              ? Image.network(
+                                                  userData.imageUrl,
+                                                  height: 87,
+                                                  width: 87,
+                                                )
+                                              : Image.asset(
                                                   'assets/images/profile.png',
                                                   height: 87,
                                                   width: 87,
@@ -159,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                               'Mike Scotti',
+                                                userData.displayName,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontFamily: 'Interbold',
@@ -197,19 +192,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              Container(
-                                                height: 32,
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(7.0),
-                                                  child: Image.asset(
-                                                      'assets/images/share_icon.png'),
+                                              InkWell(
+                                                onTap: () async {
+                                                  await Share.share(
+                                                    "Share",
+                                                    subject: "subject",
+                                                  );
+                                                },
+                                                child: Container(
+                                                  height: 32,
+                                                  width: 30,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors.primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            7.0),
+                                                    child: Image.asset(
+                                                        'assets/images/share_icon.png'),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -223,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          '@mikescotti',
+                                          '@${userData.displayName}',
                                           style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14),
@@ -235,45 +239,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Massa quis risus suscipit imperdiet facilisis pellentesque velit facilisi.',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-
-                                  height: 2.0,
-                                  fontSize: 12),
-                            ),
-                          ),
-                          SizedBox(
+                          userData.bio == ""
+                              ? SizedBox.shrink()
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        width: 80.w,
+                                        child: Text(
+                                          userData.bio.toString(),
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Interbold',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          userData.bio == ""
+                              ? SizedBox.shrink()
+                              : SizedBox(
                                   height: 9,
                                 ),
-
-                          Row(
+                          userData.address == ""
+                              ? SizedBox.shrink()
+                              : Row(
                                   children: [
                                     Image.asset(
                                       'assets/images/location_icon.png',
                                       height: 38,
                                       width: 28,
-                                      color: AppColors.primary,
                                     ),
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    Text(
-                                      '80 Miles Away From New York , USA. ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Interbold',
-                                          fontSize: 12),
+                                    SizedBox(
+                                      width: 70.w,
+                                      child: Text(
+                                        userData.address.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 10,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Interbold',
+                                            fontSize: 12),
+                                      ),
                                     ),
                                   ],
                                 ),
                           const SizedBox(
                             height: 10,
                           ),
-
                           Container(
                             height: 50,
                             width: 90.w,
@@ -383,14 +404,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 SizedBox(
                                   height: 5,
                                 ),
-
                                 for (int i = 0; i < 4; i++)
                                   Container(
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
                                         children: [
-                                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Column(
                                                 children: [
@@ -411,41 +433,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: [
                                                         Expanded(
                                                           child: const Text(
                                                             'Schrader Cellars',
                                                             maxLines: 1,
                                                             overflow:
-                                                                TextOverflow.ellipsis,
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             style: TextStyle(
-                                                                fontFamily: 'Interbold',
+                                                                fontFamily:
+                                                                    'Interbold',
                                                                 fontSize: 14),
                                                           ),
                                                         ),
                                                         Row(
                                                           children: [
                                                             InkWell(
-                                                              onTap: (){
+                                                              onTap: () {
                                                                 setState(() {
-                                                                  showOptions[i]=!showOptions[i];
+                                                                  showOptions[
+                                                                          i] =
+                                                                      !showOptions[
+                                                                          i];
                                                                 });
                                                               },
                                                               child: Container(
                                                                 width: 15,
                                                                 height: 15,
-                                                                child:
-                                                                showOptions[i] == true
-                                                                    ? Image.asset(
-                                                                  'assets/images/arrow_up.png',
-                                                                  scale: 4,
-                                                                  color: AppColors.primary,
-                                                                )
-                                                                    : Image.asset(
-                                                                  'assets/images/arrow_down.png',
-                                                                  scale: 4,
-                                                                ),
+                                                                child: showOptions[
+                                                                            i] ==
+                                                                        true
+                                                                    ? Image
+                                                                        .asset(
+                                                                        'assets/images/arrow_up.png',
+                                                                        scale:
+                                                                            4,
+                                                                        color: AppColors
+                                                                            .primary,
+                                                                      )
+                                                                    : Image
+                                                                        .asset(
+                                                                        'assets/images/arrow_down.png',
+                                                                        scale:
+                                                                            4,
+                                                                      ),
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -455,23 +491,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               height: 25,
                                                               width: 46,
                                                               decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(5),
-                                                                color: AppColors.primary
-                                                              ),
-                                                              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  color: AppColors
+                                                                      .primary),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
                                                                 children: [
-                                                                  Icon(Icons.star,color: Colors.white,size: 16,),
+                                                                  Icon(
+                                                                    Icons.star,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    size: 16,
+                                                                  ),
                                                                   SizedBox(
                                                                     width: 5,
                                                                   ),
-                                                                  Text('4.0',style: TextStyle(
-                                                                    color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold
-                                                                  ),)
-
+                                                                  Text(
+                                                                    '4.0',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )
                                                                 ],
                                                               ),
                                                             )
-
                                                           ],
                                                         )
                                                       ],
@@ -481,19 +533,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     ),
                                                     Text(
                                                       'Packs in generous steeped plum, boysenberry and mulberry flavors...',
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                       style: TextStyle(
-
                                                           color: AppColors.black
                                                               .withOpacity(0.7),
                                                           fontSize: 13),
                                                     ),
-
                                                   ],
                                                 ),
                                               ),
-
                                             ],
                                           ),
                                           Visibility(
@@ -501,42 +551,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: Container(
                                               height: 230,
                                               margin:
-                                              const EdgeInsets.only(top: 7),
+                                                  const EdgeInsets.only(top: 7),
                                               decoration: BoxDecoration(
                                                   borderRadius:
-                                                  BorderRadius.circular(10),
+                                                      BorderRadius.circular(10),
                                                   border: Border.all(
                                                       color: Colors.grey
                                                           .withOpacity(0.2),
                                                       width: 1.5)),
                                               child: SfCartesianChart(
-                                                  primaryXAxis: CategoryAxis(),enableAxisAnimation: true,
+                                                  primaryXAxis: CategoryAxis(),
+                                                  enableAxisAnimation: true,
                                                   // Chart title
 
                                                   // Enable legend
 
-                                                  title: ChartTitle(text: 'How much user drink',textStyle: TextStyle(color: AppColors.primary,fontSize: 12)),
+                                                  title: ChartTitle(
+                                                      text:
+                                                          'How much user drink',
+                                                      textStyle: TextStyle(
+                                                          color:
+                                                              AppColors.primary,
+                                                          fontSize: 12)),
                                                   // Enable tooltip
-                                                  tooltipBehavior: TooltipBehavior(enable: true),
-                                                  series: <ChartSeries<_SalesData, String>>[
-                                                    LineSeries<_SalesData, String>(
+                                                  tooltipBehavior:
+                                                      TooltipBehavior(
+                                                          enable: true),
+                                                  series: <
+                                                      ChartSeries<_SalesData,
+                                                          String>>[
+                                                    LineSeries<_SalesData,
+                                                            String>(
                                                         dataSource: data,
-                                                        xValueMapper: (_SalesData sales, _) => sales.year,
-                                                        yValueMapper: (_SalesData sales, _) => sales.sales,
-                                                        color: AppColors.primary,
+                                                        xValueMapper:
+                                                            (_SalesData sales,
+                                                                    _) =>
+                                                                sales.year,
+                                                        yValueMapper:
+                                                            (_SalesData sales,
+                                                                    _) =>
+                                                                sales.sales,
+                                                        color:
+                                                            AppColors.primary,
                                                         // Enable data label
-                                                        dataLabelSettings: DataLabelSettings(isVisible: true))
+                                                        dataLabelSettings:
+                                                            DataLabelSettings(
+                                                                isVisible:
+                                                                    true))
                                                   ]),
-
                                             ),
                                           ),
                                         ],
                                       ),
-
-
                                     ),
                                   ),
-
                                 const SizedBox(
                                   height: 13,
                                 ),
@@ -551,73 +619,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 'Recommend Wines',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-
-                                    fontSize: 21),
+                                    fontWeight: FontWeight.w600, fontSize: 21),
                               )
                             ],
                           ),
-                       
                           const SizedBox(
                             height: 20,
                           ),
-                          for(int i=0;i<5;i++)
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: 25,
-                              ),
-                              Container(
-                                width: 90.w,
-                                decoration: containerDecoration(),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                   Image.asset('assets/images/intercept.png',height: 120,width: 80.w,fit: BoxFit.fitWidth,),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Intercept',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-
-                                                fontSize: 16),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'This is impressive for its vibrancy and balance, blending fresh lemon zest.',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-
-                                            color: AppColors.black
-                                                .withOpacity(0.7),
-                                            fontSize: 13),
-                                      ),
-                                    ],
+                          for (int i = 0; i < 5; i++)
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                Container(
+                                  width: 90.w,
+                                  decoration: containerDecoration(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Image.asset(
+                                          'assets/images/intercept.png',
+                                          height: 120,
+                                          width: 80.w,
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Intercept',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'This is impressive for its vibrancy and balance, blending fresh lemon zest.',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              color: AppColors.black
+                                                  .withOpacity(0.7),
+                                              fontSize: 13),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-
-
+                              ],
+                            ),
                           const SizedBox(
                             height: 30,
                           ),
-
-
                           CommonWidgets.footer()
                         ],
                       ),
@@ -674,6 +738,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
 class _SalesData {
   _SalesData(this.year, this.sales);
 

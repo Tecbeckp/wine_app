@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../common_widgets/colors.dart';
+import '../common_widgets/common_loader.dart';
 import '../common_widgets/page_transition.dart';
 import '../helpers/constants.dart';
 import '../models/user_model.dart';
@@ -243,9 +244,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                     ),
                                     InkWell(
-                                      onTap: () {
-                                        PageTransition.fadeInNavigation(
-                                            page: HomeScreen());
+                                      onTap: () async {
+                                        setState(() {
+                                          loader = true;
+                                        });
+                                        await validateUser(emailController.text,
+                                            passwordController.text);
                                       },
                                       child: Container(
                                         width: 90.w,
@@ -257,14 +261,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Center(
                                           child: Padding(
                                             padding: EdgeInsets.all(13),
-                                            child: Text(
-                                              'Sign In',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 17,
-                                                fontFamily: 'InterMedium',
-                                              ),
-                                            ),
+                                            child: loader == true
+                                                ? Center(child: CommonLoader())
+                                                : Text(
+                                                    'Sign In',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 17,
+                                                      fontFamily: 'InterMedium',
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                       ),
@@ -448,8 +454,8 @@ class _LoginScreenState extends State<LoginScreen> {
           .signInWithEmailAndPassword(email: email, password: password);
       userDocId.value = user.user!.uid;
 
-      // saveUserData(userID: userDocId.value);
-      // setUserLoggedIn(true);
+      saveUserData(userID: userDocId.value);
+      setUserLoggedIn(true);
       FirebaseFirestore.instance
           .collection('users')
           .doc(user.user!.uid)
@@ -464,7 +470,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
         setState(() {
           loggedInGlobal.value = true;
-          loader = false;
         });
         return AwesomeDialog(
           context: context,

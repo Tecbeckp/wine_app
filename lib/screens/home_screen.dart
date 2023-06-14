@@ -1,6 +1,8 @@
 import 'package:bordeaux/screens/age_verification.dart';
 import 'package:bordeaux/screens/profile_screen.dart';
 import 'package:bordeaux/screens/search_pages.dart';
+import 'package:dart_openai/openai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -138,18 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    Get.to(() => AgeVerification());
-                                  },
-                                  child: Text(
-                                    'BORDEAUX',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        fontFamily: 'ManropeBold'),
-                                  ),
+                                Text(
+                                  'BORDEAUX',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      fontFamily: 'ManropeBold'),
                                 ),
                               ],
                             ),
@@ -486,48 +483,90 @@ class _HomeScreenState extends State<HomeScreen> {
                                               BorderRadius.circular(7.0),
                                         ),
                                         child: InkWell(
-                                          onTap: () {
-                                            if (dropdownFieldController
-                                                .text.isNotEmpty) {
-                                              setState(() {
-                                                isLoading = true;
-                                              });
-                                              PageTransition.fadeInNavigation(
-                                                  page: SearchPages(
-                                                symptom:
-                                                    symptomsController.text,
-                                                selectedTypes: selectedValues,
-                                              ));
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                for (int i = 0;
-                                                    i < dropDownImages.length;
-                                                    i++) {
-                                                  selectedValues
-                                                      .add(dropDownTitles[i]);
-                                                  herbsCheck[i] = true;
-                                                  dropdownFieldController.text =
-                                                      selectedValues.join(',');
-                                                }
-                                                setState(() {
-                                                  isLoading = true;
-                                                });
+                                          onTap: () async {
+                                            ageVerified.value
+                                                ? (dropdownFieldController
+                                                        .text.isNotEmpty)
+                                                    ? {
+                                                        setState(() {
+                                                          isLoading = true;
+                                                        }),
+                                                        await chatGptResponse(
+                                                            symptomsController
+                                                                .text,
+                                                            dropdownFieldController
+                                                                .text),
+                                                        PageTransition
+                                                            .fadeInNavigation(
+                                                                page:
+                                                                    SearchPages(
+                                                          symptom:
+                                                              symptomsController
+                                                                  .text,
+                                                          selectedTypes:
+                                                              selectedValues,
+                                                        )),
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        }),
+                                                      }
+                                                    : {
+                                                        setState(() async {
+                                                          for (int i = 0;
+                                                              i <
+                                                                  dropDownImages
+                                                                      .length;
+                                                              i++) {
+                                                            selectedValues.add(
+                                                                dropDownTitles[
+                                                                    i]);
+                                                            herbsCheck[i] =
+                                                                true;
+                                                            dropdownFieldController
+                                                                    .text =
+                                                                selectedValues
+                                                                    .join(',');
+                                                          }
+                                                          setState(() {
+                                                            isLoading = true;
+                                                          });
+                                                          await chatGptResponse(
+                                                              symptomsController
+                                                                  .text,
+                                                              dropdownFieldController
+                                                                  .text);
+                                                          PageTransition
+                                                              .fadeInNavigation(
+                                                                  page:
+                                                                      SearchPages(
+                                                            symptom:
+                                                                symptomsController
+                                                                    .text,
+                                                            selectedTypes:
+                                                                selectedValues,
+                                                          ));
 
-                                                PageTransition.fadeInNavigation(
-                                                    page: SearchPages(
-                                                  symptom:
-                                                      symptomsController.text,
-                                                  selectedTypes: selectedValues,
-                                                ));
-
-                                                setState(() {
-                                                  isLoading = false;
-                                                });
-                                              });
-                                            }
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                        })
+                                                      }
+                                                : {
+                                                    PageTransition
+                                                        .fadeInNavigation(
+                                                            page:
+                                                                AgeVerification(
+                                                      symptom:
+                                                          symptomsController
+                                                              .text,
+                                                      selectedTypes:
+                                                          selectedValues,
+                                                    )),
+                                                    await chatGptResponse(
+                                                        symptomsController.text,
+                                                        dropdownFieldController
+                                                            .text),
+                                                  };
                                           },
                                           child: isLoading
                                               ? const Center(
@@ -559,44 +598,51 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Visibility(
                         visible: !showOptions,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 8),
-                          child: SizedBox(
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Sign In ',
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primary,
-                                          fontSize: 11.sp,
-                                          height: 1.7),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          print("hello");
-                                          generalController
-                                              .backgroundImageCounter(
-                                                  generateRandomNumber(0,
-                                                      backgroundImages.length));
-                                          print(generalController
-                                              .backgroundImageCounter.value);
-                                          PageTransition.fadeInNavigation(
-                                              page: const LoginScreen());
-                                        }),
-                                  TextSpan(
-                                      text: ' for your medical records.',
-                                      style: TextStyle(
-                                        fontSize: 11.sp,
-                                        color: Colors.white,
-                                      )),
-                                ],
+                        child: loggedInGlobal.value
+                            ? const SizedBox.shrink()
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                child: SizedBox(
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: 'Sign In ',
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.primary,
+                                                fontSize: 11.sp,
+                                                height: 1.7),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                print("hello");
+                                                generalController
+                                                    .backgroundImageCounter(
+                                                        generateRandomNumber(
+                                                            0,
+                                                            backgroundImages
+                                                                .length));
+                                                print(generalController
+                                                    .backgroundImageCounter
+                                                    .value);
+                                                PageTransition.fadeInNavigation(
+                                                    page: const LoginScreen());
+                                              }),
+                                        TextSpan(
+                                            text: ' for your medical records.',
+                                            style: TextStyle(
+                                              fontSize: 11.sp,
+                                              color: Colors.white,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -608,6 +654,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> chatGptResponse(mealType, wine) async {
+    OpenAI.apiKey = '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';
+    //OpenAI.apiKey = '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'; //4
+    if (kDebugMode) {
+      print(
+        "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this my meal ('$mealType')",
+      );
+    }
+    final chatCompletion = await OpenAI.instance.chat.create(
+      model: 'gpt-3.5-turbo',
+      //model: 'gpt-4',
+      messages: [
+        OpenAIChatCompletionChoiceMessageModel(
+          content:
+              "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this my meal ('$mealType')",
+          role: OpenAIChatMessageRole.user,
+        ),
+      ],
+    );
+    var abc = chatCompletion.choices.first.message.content;
+    // chat = abc.toString().split("\n");
+    chatRespList = abc.toString().split(RegExp(r'\d+\.\s'));
   }
 
   placesAutoCompleteTextField() {

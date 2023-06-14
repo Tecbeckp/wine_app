@@ -1,18 +1,14 @@
 import 'package:bordeaux/common_widgets/page_transition.dart';
-import 'package:bordeaux/screens/age_verification.dart';
-import 'package:bordeaux/screens/group_chat_inbox.dart';
 import 'package:bordeaux/screens/group_chat_screen.dart';
+import 'package:bordeaux/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:sizer/sizer.dart';
 
 import '../controllers/general_controller.dart';
 import '../helpers/constants.dart';
-import '../screens/chart.dart';
 import '../screens/general_setting_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/login_screen.dart';
 import '../screens/profile_screen.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -69,38 +65,37 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
             ),
-
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(color: Colors.white.withOpacity(0.3)))),
-              height: 50,
-              child: Center(
-                child: InkWell(
-                  onTap: (){
-                    PageTransition.fadeInNavigation(page: AgeVerification());
-                  },
-                  child: Row(
-                    children: const [
-                      SizedBox(
-                        width: 17,
-                      ),
-                      Text(
-                        'Age Verification',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Interbold',
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //       border: Border(
+            //           bottom:
+            //               BorderSide(color: Colors.white.withOpacity(0.3)))),
+            //   height: 50,
+            //   child: Center(
+            //     child: InkWell(
+            //       onTap: () {
+            //         PageTransition.fadeInNavigation(page: AgeVerification());
+            //       },
+            //       child: Row(
+            //         children: const [
+            //           SizedBox(
+            //             width: 17,
+            //           ),
+            //           Text(
+            //             'Age Verification',
+            //             style: TextStyle(
+            //                 fontWeight: FontWeight.bold,
+            //                 fontFamily: 'Interbold',
+            //                 color: Colors.white),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             InkWell(
-              onTap: (){
-                Get.to(()=>GroupChatScreen());
+              onTap: () {
+                Get.to(() => GroupChatScreen());
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -129,7 +124,9 @@ class _MyDrawerState extends State<MyDrawer> {
             InkWell(
               onTap: () {
                 Get.back();
-                PageTransition.fadeInNavigation(page: ProfileScreen());
+                loggedInGlobal.value
+                    ? PageTransition.fadeInNavigation(page: ProfileScreen())
+                    : PageTransition.fadeInNavigation(page: LoginScreen());
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -155,7 +152,6 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
             ),
-
             InkWell(
               onTap: () {
                 Get.back();

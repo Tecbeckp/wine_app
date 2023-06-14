@@ -90,6 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         InkWell(
                           onTap: () async {
                             Get.back();
+                            _upload('camera');
                           },
                           child: Container(
                             child: Container(
@@ -108,6 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         InkWell(
                           onTap: () async {
                             Get.back();
+                            _upload('gallery');
                           },
                           child: Container(
                               height: 40,

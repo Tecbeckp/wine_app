@@ -1,8 +1,9 @@
 import 'dart:math' show pi;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:sizer/sizer.dart';
 
 import '../helpers/constants.dart';
@@ -25,27 +26,57 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _animation;
   late Animation<double> _animationCounterClock;
   late bool login;
-
-
   getData() async {
-
-
-      Future.delayed(const Duration(milliseconds: 4000), () {
-        Get.offAll(() => HomeScreen(
-          fromStart: false,
-        ));
+    login = await getUserLoggedIn();
+    if (login == true) {
+      ageVerified.value = true;
+      var userid = await getUserData();
+      userDocId.value = userid.toString();
+      setState(() {
+        loggedInGlobal.value = true;
       });
-
+      await FirebaseMessaging.instance.getToken().then((value) {
+        fcmToken.value = value!;
+        print("Token saved");
+        print(fcmToken.value);
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userDocId.value)
+          .update({'FcmToken': fcmToken.value});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userDocId.value)
+          .get()
+          .then((value) async {
+        setState(() {
+          userData = UserModel.fromDocument(value.data());
+          EmailConst.value = value.data()!['email'];
+          NameConst.value = value.data()!['displayName'];
+          profileUrlConst.value = value.data()!['imageUrl'];
+        });
+      });
+      Future.delayed(const Duration(milliseconds: 4000), () {
+        Get.offAll(() => const HomeScreen(
+              fromStart: false,
+            ));
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 4000), () {
+        Get.offAll(() => const HomeScreen(
+              fromStart: false,
+            ));
+      });
+    }
   }
-
 
   @override
   void initState() {
     super.initState();
     _contorller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _contorllerCounterClock =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
     _animation = Tween<double>(
       begin: 0.0,
@@ -67,7 +98,6 @@ class _SplashScreenState extends State<SplashScreen>
     _contorllerCounterClock.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
