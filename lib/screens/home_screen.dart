@@ -661,7 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chatGptResponse(mealType, wine) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     if (kDebugMode) {
       print(
