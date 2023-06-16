@@ -16,7 +16,8 @@ UserModel userData = UserModel(
     imageUrl: "",
     address: '',
     bio: '',
-    phoneNumber: '');
+    phoneNumber: '',
+    notification: true);
 final userDocId = ValueNotifier("");
 final EmailConst = ValueNotifier("");
 final NameConst = ValueNotifier("");

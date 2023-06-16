@@ -1,6 +1,7 @@
 import 'package:bordeaux/screens/age_verification.dart';
 import 'package:bordeaux/screens/profile_screen.dart';
 import 'package:bordeaux/screens/search_pages.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:sizer/sizer.dart';
+import 'package:uuid/uuid.dart';
 
+import '../RestApi.dart';
 import '../common_widgets/colors.dart';
 import '../common_widgets/common_loader.dart';
 import '../common_widgets/common_widgets.dart';
@@ -31,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> membersList = [];
   List<String> groupList = [];
   final generalController = Get.find<GeneralController>();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController symptomsController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   List<bool> herbsCheck = [false, false, false, false, false, false];
@@ -657,7 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chatGptResponse(mealType, wine) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     if (kDebugMode) {
       print(
@@ -678,6 +682,55 @@ class _HomeScreenState extends State<HomeScreen> {
     var abc = chatCompletion.choices.first.message.content;
     // chat = abc.toString().split("\n");
     chatRespList = abc.toString().split(RegExp(r'\d+\.\s'));
+
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection("searches").get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i].data() as Map;
+      groupList.add(a['search']);
+    }
+    if (groupList.contains(mealType)) {
+      for (int i = 0; i < querySnapshot.docs.length; i++) {
+        var a = querySnapshot.docs[i].data() as Map;
+        if (mealType == a['search']) {
+          if (a['fcmToken'] != fcmToken.value) {
+            ApiService.sendNotification(fcmToken.value, mealType);
+          }
+        }
+      }
+    } else {
+      createGroup(mealType);
+      userData.notification
+          ? await ApiService.sendNotification(fcmToken.value, mealType)
+          : null;
+    }
+    await FirebaseFirestore.instance.collection('searches').doc().set({
+      'search': mealType,
+      'fcmToken': fcmToken.value,
+    });
+  }
+
+  void createGroup(symptoms) async {
+    String groupId = const Uuid().v1();
+
+    await _firestore.collection('groups').doc(groupId).set({
+      "id": groupId,
+      "name": symptoms.toString(),
+      "members": membersList,
+      'creationTime': FieldValue.serverTimestamp(),
+      'imageUrl': '',
+      'groupOrder': FieldValue.serverTimestamp(),
+    });
+    await _firestore
+        .collection('users')
+        .doc(userDocId.value)
+        .collection('groups')
+        .doc(groupId)
+        .set({
+      "name": symptoms.toString(),
+      "id": groupId,
+      'creationTime': FieldValue.serverTimestamp(),
+    });
   }
 
   placesAutoCompleteTextField() {

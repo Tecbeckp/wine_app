@@ -477,6 +477,7 @@ class _LoginScreenState extends State<LoginScreen> {
           btnOkOnPress: () {
             setState(() {
               loggedInGlobal.value = true;
+              ageVerified.value = true;
             });
             PageTransition.fadeInNavigation(page: const HomeScreen());
           },

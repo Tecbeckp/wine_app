@@ -244,7 +244,7 @@ class _AgeVerificationState extends State<AgeVerification> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 40,
                                     ),
                                     InkWell(

@@ -95,7 +95,9 @@ class _MyDrawerState extends State<MyDrawer> {
             // ),
             InkWell(
               onTap: () {
-                Get.to(() => GroupChatScreen());
+                Get.to(() => GroupChatScreen(
+                      addingMember: false,
+                    ));
               },
               child: Container(
                 decoration: BoxDecoration(

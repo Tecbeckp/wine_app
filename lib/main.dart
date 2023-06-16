@@ -1,3 +1,4 @@
+import 'package:bordeaux/screens/login_screen.dart';
 import 'package:bordeaux/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,17 +8,63 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
+import 'common_widgets/page_transition.dart';
 import 'controllers/general_controller.dart';
+import 'helpers/commonDialogBox.dart';
 import 'helpers/constants.dart';
+import 'screens/group_chat_screen.dart';
 
 Future<void> _handleMessage(RemoteMessage message) async {
   print("_handleMessage");
   print(message);
+  bool login = await getUserLoggedIn();
+  if (login) {
+    var userid = await getUserData();
+
+    customDialog.showErrorDialog(
+      title: "Group Join",
+      description: "want to join group of people with similar issues ? ",
+      btnNoPressed: () {
+        Get.back();
+      },
+      btnYesPressed: () {
+        PageTransition.fadeInNavigation(
+            page: GroupChatScreen(
+          addingMember: true,
+          groupTitle: groupNotificationTitle,
+        ));
+      },
+    );
+  } else {
+    PageTransition.fadeInNavigation(page: const LoginScreen());
+  }
 }
 
 Future<void> onSelectNotification(String? payload) async {
   print("onSelectNotification");
   print(payload);
+
+  bool login = await getUserLoggedIn();
+  if (login) {
+    var userid = await getUserData();
+
+    customDialog.showErrorDialog(
+      title: "Group Join",
+      description: "want to join group of people with similar issues ? ",
+      btnNoPressed: () {
+        Get.back();
+      },
+      btnYesPressed: () {
+        PageTransition.fadeInNavigation(
+            page: GroupChatScreen(
+          addingMember: true,
+          groupTitle: groupNotificationTitle,
+        ));
+      },
+    );
+  } else {
+    PageTransition.fadeInNavigation(page: const LoginScreen());
+  }
 }
 
 Future<void> _selectNotification(RemoteMessage message) async {

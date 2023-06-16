@@ -6,8 +6,7 @@ class UserModel {
   dynamic address;
   dynamic bio;
   dynamic phoneNumber;
-  dynamic paidSubscription;
-  dynamic subScriptionDate;
+  bool notification;
 
   UserModel({
     required this.fcmToken,
@@ -17,14 +16,12 @@ class UserModel {
     required this.address,
     required this.bio,
     required this.phoneNumber,
-    this.paidSubscription = false,
-    this.subScriptionDate = "",
+    this.notification = true,
   });
 
   factory UserModel.fromDocument(var data) {
     return UserModel(
-        paidSubscription: data['paidSubscription'],
-        subScriptionDate: data['SubscriptionDate'],
+        notification: data['notification'] ?? true,
         fcmToken: data['FcmToken'],
         email: data['email'],
         displayName: data['displayName'],

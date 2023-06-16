@@ -17,13 +17,13 @@ class ApiService {
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization':
-            'key=AAAAzlZli8E:APA91bE-7xiIUZ6y5W3t1vXY6c8H_GBIDG34XL94oTstAHeCQn7te4ePGSzhhGLxJQ434_x-jBHnieAnLknXcudd8mkj7C-8Vgb5PWZs0r60VXlZ2NF42DYbTcO1NagpWRlL_3RDndt-',
+            'key=AAAAw5EslJU:APA91bEXg4QzADxHk0SapmwbCZjqESAy_S0-KGJd0m_8u1st6BDlfhFiHZkymrIVQDZPAYQVc6unyr4k_cQvPsss-1LHMw7q0ZvL67tdE-Qm1YrBAit2RqFptnBT8oitJ-ZE-kmNJs1R',
       },
       body: jsonEncode(
         <String, dynamic>{
           'notification': <String, dynamic>{
             'body':
-                "would you like to join group of people with similar problems",
+                "would you like to join group of people with similar cuisines interest",
             'title': "Group creation",
             'sound': 'default'
           },
