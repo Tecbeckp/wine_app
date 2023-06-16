@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -827,30 +828,45 @@ class _SearchPagesState extends State<SearchPages> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                  height: 28,
-                                                  width: 28,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .heartContainer
-                                                        .withOpacity(0.2),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  child: Center(
-                                                      child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 3,
-                                                            left: 3,
-                                                            bottom: 3,
-                                                            right: 4),
-                                                    child: Icon(
-                                                      Icons.favorite_border,
-                                                      color: AppColors.primary,
+                                              InkWell(
+                                                onTap: () {
+                                                  print("szs");
+                                                  FirebaseFirestore.instance
+                                                      .collection('users')
+                                                      .doc(userDocId.value)
+                                                      .collection("favourites")
+                                                      .doc()
+                                                      .set({
+                                                    'content':
+                                                        chatRespList[index],
+                                                  });
+                                                },
+                                                child: Container(
+                                                    height: 28,
+                                                    width: 28,
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .heartContainer
+                                                          .withOpacity(0.2),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
                                                     ),
-                                                  ))),
+                                                    child: Center(
+                                                        child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 3,
+                                                              left: 3,
+                                                              bottom: 3,
+                                                              right: 4),
+                                                      child: Icon(
+                                                        Icons.favorite_border,
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
+                                                    ))),
+                                              ),
                                             ],
                                           )
                                         ],

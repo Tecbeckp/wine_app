@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,21 +31,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool isLoader = false;
   List<bool> showOptions = List.filled(4, false, growable: true);
+  var favioriteMealsList;
+  List<String> favioriteMealsData = [];
   getData() async {
     setState(() {
       isLoader = true;
     });
     await chatGptResponse("thai");
-    // await authorize();
-    // await fetchData();
-    // await fetchStepData();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userDocId.value)
+        .collection('favourites')
+        .get();
+
+    favioriteMealsList = querySnapshot.docs.length;
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i].data() as Map;
+      favioriteMealsData.add(a['content']);
+    }
+
     setState(() {
       isLoader = false;
     });
   }
 
   Future<void> chatGptResponse(mealType) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     final chatCompletion = await OpenAI.instance.chat.create(
       model: 'gpt-3.5-turbo',
@@ -407,190 +419,230 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           SizedBox(
                             height: 5,
                           ),
-                          for (int i = 0; i < 4; i++)
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
+                          favioriteMealsData.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                      child: Text("No favorites added")),
+                                )
+                              : Column(
                                   children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/profile_wine.png',
-                                              height: 90,
-                                              width: 90,
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
+                                    for (int i = 0; i < favioriteMealsList; i++)
+                                      Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
                                             children: [
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Expanded(
-                                                    child: const Text(
-                                                      'Schrader Cellars',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Interbold',
-                                                          fontSize: 14),
-                                                    ),
-                                                  ),
-                                                  Row(
+                                                  Column(
                                                     children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            showOptions[i] =
-                                                                !showOptions[i];
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          width: 15,
-                                                          height: 15,
-                                                          child:
-                                                              showOptions[i] ==
-                                                                      true
-                                                                  ? Image.asset(
-                                                                      'assets/images/arrow_up.png',
-                                                                      scale: 4,
-                                                                      color: AppColors
-                                                                          .primary,
-                                                                    )
-                                                                  : Image.asset(
-                                                                      'assets/images/arrow_down.png',
-                                                                      scale: 4,
-                                                                    ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        height: 25,
-                                                        width: 46,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                            color: AppColors
-                                                                .primary),
-                                                        child: Row(
+                                                      Image.asset(
+                                                        'assets/images/profile_wine.png',
+                                                        height: 90,
+                                                        width: 90,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .center,
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 16,
+                                                            Expanded(
+                                                              child: const Text(
+                                                                'Schrader Cellars',
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Interbold',
+                                                                    fontSize:
+                                                                        14),
+                                                              ),
                                                             ),
-                                                            SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Text(
-                                                              '4.0',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                            Row(
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    setState(
+                                                                        () {
+                                                                      showOptions[
+                                                                              i] =
+                                                                          !showOptions[
+                                                                              i];
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    width: 15,
+                                                                    height: 15,
+                                                                    child: showOptions[i] ==
+                                                                            true
+                                                                        ? Image
+                                                                            .asset(
+                                                                            'assets/images/arrow_up.png',
+                                                                            scale:
+                                                                                4,
+                                                                            color:
+                                                                                AppColors.primary,
+                                                                          )
+                                                                        : Image
+                                                                            .asset(
+                                                                            'assets/images/arrow_down.png',
+                                                                            scale:
+                                                                                4,
+                                                                          ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Container(
+                                                                  height: 25,
+                                                                  width: 46,
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5),
+                                                                      color: AppColors
+                                                                          .primary),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .star,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        size:
+                                                                            16,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      Text(
+                                                                        '4.0',
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              ],
                                                             )
                                                           ],
                                                         ),
-                                                      )
-                                                    ],
-                                                  )
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Text(
+                                                          favioriteMealsData[
+                                                                  i] ??
+                                                              "",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 2,
+                                                          style: TextStyle(
+                                                              color: AppColors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.7),
+                                                              fontSize: 13),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                'Packs in generous steeped plum, boysenberry and mulberry flavors...',
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                style: TextStyle(
-                                                    color: AppColors.black
-                                                        .withOpacity(0.7),
-                                                    fontSize: 13),
+                                              Visibility(
+                                                visible: showOptions[i],
+                                                child: Container(
+                                                  height: 230,
+                                                  margin: const EdgeInsets.only(
+                                                      top: 7),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      border: Border.all(
+                                                          color: Colors.grey
+                                                              .withOpacity(0.2),
+                                                          width: 1.5)),
+                                                  child: SfCartesianChart(
+                                                      primaryXAxis:
+                                                          CategoryAxis(),
+                                                      enableAxisAnimation: true,
+                                                      // Chart title
+
+                                                      // Enable legend
+
+                                                      title: ChartTitle(
+                                                          text:
+                                                              'How much user drink',
+                                                          textStyle: TextStyle(
+                                                              color: AppColors
+                                                                  .primary,
+                                                              fontSize: 12)),
+                                                      // Enable tooltip
+                                                      tooltipBehavior:
+                                                          TooltipBehavior(
+                                                              enable: true),
+                                                      series: <
+                                                          ChartSeries<
+                                                              _SalesData,
+                                                              String>>[
+                                                        LineSeries<_SalesData,
+                                                                String>(
+                                                            dataSource: data,
+                                                            xValueMapper:
+                                                                (_SalesData sales,
+                                                                        _) =>
+                                                                    sales.year,
+                                                            yValueMapper:
+                                                                (_SalesData sales,
+                                                                        _) =>
+                                                                    sales.sales,
+                                                            color: AppColors
+                                                                .primary,
+                                                            // Enable data label
+                                                            dataLabelSettings:
+                                                                DataLabelSettings(
+                                                                    isVisible:
+                                                                        true))
+                                                      ]),
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Visibility(
-                                      visible: showOptions[i],
-                                      child: Container(
-                                        height: 230,
-                                        margin: const EdgeInsets.only(top: 7),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: Colors.grey
-                                                    .withOpacity(0.2),
-                                                width: 1.5)),
-                                        child: SfCartesianChart(
-                                            primaryXAxis: CategoryAxis(),
-                                            enableAxisAnimation: true,
-                                            // Chart title
-
-                                            // Enable legend
-
-                                            title: ChartTitle(
-                                                text: 'How much user drink',
-                                                textStyle: TextStyle(
-                                                    color: AppColors.primary,
-                                                    fontSize: 12)),
-                                            // Enable tooltip
-                                            tooltipBehavior:
-                                                TooltipBehavior(enable: true),
-                                            series: <
-                                                ChartSeries<_SalesData,
-                                                    String>>[
-                                              LineSeries<_SalesData, String>(
-                                                  dataSource: data,
-                                                  xValueMapper:
-                                                      (_SalesData sales, _) =>
-                                                          sales.year,
-                                                  yValueMapper:
-                                                      (_SalesData sales, _) =>
-                                                          sales.sales,
-                                                  color: AppColors.primary,
-                                                  // Enable data label
-                                                  dataLabelSettings:
-                                                      DataLabelSettings(
-                                                          isVisible: true))
-                                            ]),
                                       ),
-                                    ),
                                   ],
                                 ),
-                              ),
-                            ),
                           const SizedBox(
                             height: 13,
                           ),

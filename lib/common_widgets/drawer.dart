@@ -1,6 +1,7 @@
 import 'package:bordeaux/common_widgets/page_transition.dart';
 import 'package:bordeaux/screens/group_chat_screen.dart';
 import 'package:bordeaux/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -183,26 +184,36 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(color: Colors.white.withOpacity(0.3)))),
-              height: 50,
-              child: Center(
-                child: Row(
-                  children: const [
-                    SizedBox(
-                      width: 17,
-                    ),
-                    Text(
-                      'Log out',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Interbold',
-                          color: Colors.white),
-                    ),
-                  ],
+            InkWell(
+              onTap: () async {
+                setUserLoggedIn(false);
+                setState(() {
+                  loggedInGlobal.value = false;
+                });
+                await FirebaseAuth.instance.signOut();
+                Get.offAll(const LoginScreen());
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom:
+                            BorderSide(color: Colors.white.withOpacity(0.3)))),
+                height: 50,
+                child: Center(
+                  child: Row(
+                    children: const [
+                      SizedBox(
+                        width: 17,
+                      ),
+                      Text(
+                        'Log out',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Interbold',
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
