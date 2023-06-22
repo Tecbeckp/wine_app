@@ -88,6 +88,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       "id": groupId,
       'creationTime': FieldValue.serverTimestamp(),
     });
+
+    await getAllGroupChatWithMoreInfo();
   }
 
   getAllGroupChatWithMoreInfo() async {
@@ -216,8 +218,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.addingMember ? getData() : null;
-    getAllGroupChatWithMoreInfo();
+    widget.addingMember ? getData() : getAllGroupChatWithMoreInfo();
   }
 
   @override

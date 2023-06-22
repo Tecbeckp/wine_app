@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           StatefulBuilder(builder:
                                               (BuildContext context,
                                                   StateSetter setState) {
-                                            return const ChattingView();
+                                            return ChattingView();
                                           }),
                                         ]);
                                       });
@@ -661,7 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chatGptResponse(mealType, wine) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     if (kDebugMode) {
       print(
@@ -818,33 +818,7 @@ class ChattingView extends StatefulWidget {
 class _ChattingViewState extends State<ChattingView> {
   final TextEditingController textFieldController = TextEditingController();
 
-  List<ChatMessage> messages = [
-    ChatMessage(
-        messageContent:
-            "Ut pellentesque auctor hac tristique diam aliquet nulla consectetur praesent. Vel condimentum nunc semper diam sed.",
-        messageType: "receiver",
-        dateTime: "18:06"),
-    ChatMessage(
-        messageContent:
-            "Aliquam est morbi amet euismod viverra in. Nunc enim nullam pur Viverra proin.",
-        messageType: "sender",
-        dateTime: "18:06 AM"),
-    ChatMessage(
-        messageContent:
-            "Ut pellentesque auctor hac tristique diam aliquet nulla consectetur praesent. Vel condimentum nunc semper diam sed.",
-        messageType: "receiver",
-        dateTime: "18:06 AM"),
-    ChatMessage(
-        messageContent:
-            "Sollicitudin netus nascetur nulla nisi ac quis pharetra laoreet. ",
-        messageType: "sender",
-        dateTime: "18:06 AM"),
-    ChatMessage(
-        messageContent:
-            "Ut pellentesque auctor hac tristique diam aliquet nulla consectetur praesent. Vel condimentum nunc semper diam sed.",
-        messageType: "receiver",
-        dateTime: "18:06 AM"),
-  ];
+  List<ChatMessage> messages = [];
   List<String> name = [
     "sender",
     "reciever",
@@ -857,171 +831,171 @@ class _ChattingViewState extends State<ChattingView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Column(
-        children: [
-          Container(
-            height: 90,
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(15.0),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white),
-                        child: Center(
-                            child: Image.asset(
-                          'assets/images/chat_icon.png',
-                          height: 30,
-                          width: 30,
-                          color: AppColors.primary,
-                        )),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'I\'m Surely!',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        'Nice to meet you',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+    return Column(
+      children: [
+        Container(
+          height: 90,
+          decoration: const BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(15.0),
             ),
           ),
-          SizedBox(
-            height: 70.h,
-            child: Column(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Row(
               children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: messages.length,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.only(
-                            left: 14, right: 14, top: 10, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment:
-                                  (messages[index].messageType == "receiver"
-                                      ? Alignment.topLeft
-                                      : Alignment.topRight),
-                              child: Container(
-                                width: 80.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color:
-                                      (messages[index].messageType == "receiver"
-                                          ? Colors.grey.shade200
-                                          : AppColors.primary),
-                                ),
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  messages[index].messageContent,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      height: 1.7,
-                                      color: (messages[index].messageType ==
-                                              "receiver"
-                                          ? Colors.black
-                                          : Colors.white)),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Align(
-                              alignment:
-                                  (messages[index].messageType == "receiver"
-                                      ? Alignment.topLeft
-                                      : Alignment.topRight),
-                              child: Text(
-                                messages[index].dateTime,
-                                style: const TextStyle(
-                                    fontSize: 11, color: AppColors.dateTime),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  height: 62,
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 0, bottom: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white),
+                      child: Center(
+                          child: Image.asset(
+                        'assets/images/chat_icon.png',
+                        height: 30,
+                        width: 30,
+                        color: AppColors.primary,
+                      )),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 7,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(5, 0), // changes position of shadow
+                  ],
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'I\'m Surely!',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Nice to meet you',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 70.h,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.only(
+                          left: 14, right: 14, top: 10, bottom: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment:
+                                (messages[index].messageType == "receiver"
+                                    ? Alignment.topLeft
+                                    : Alignment.topRight),
+                            child: Container(
+                              width: 80.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color:
+                                    (messages[index].messageType == "receiver"
+                                        ? Colors.grey.shade200
+                                        : AppColors.primary),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: Text(
+                                messages[index].messageContent,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    height: 1.7,
+                                    color: (messages[index].messageType ==
+                                            "receiver"
+                                        ? Colors.black
+                                        : Colors.white)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                            alignment:
+                                (messages[index].messageType == "receiver"
+                                    ? Alignment.topLeft
+                                    : Alignment.topRight),
+                            child: Text(
+                              messages[index].dateTime.toString(),
+                              style: const TextStyle(
+                                  fontSize: 11, color: AppColors.dateTime),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    );
+                  },
+                ),
+              ),
+              Container(
+                height: 62,
+                padding: const EdgeInsets.only(left: 20, right: 0, bottom: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20.0),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: textFieldController,
-                          decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Message...",
-                              hintStyle: TextStyle(
-                                  fontSize: 12, color: AppColors.black),
-                              contentPadding:
-                                  EdgeInsets.only(bottom: 10, right: 10)),
-                        ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 7,
+                      blurRadius: 7,
+                      offset: const Offset(5, 0), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: textFieldController,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Message...",
+                            hintStyle:
+                                TextStyle(fontSize: 12, color: AppColors.black),
+                            contentPadding:
+                                EdgeInsets.only(bottom: 10, right: 10)),
                       ),
-                      Image.asset(
-                        'assets/images/microphone.png',
-                        height: 40,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      Image.asset(
-                        'assets/images/gallery.png',
-                        height: 40,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
+                    ),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          messages.add(
+                            ChatMessage(
+                              messageType: "receivers",
+                              dateTime: DateTime.now(),
+                              messageContent: textFieldController.text,
+                            ),
+                          );
+                        });
+                        callApi(messages);
+                        textFieldController.clear();
+                      },
+                      child: Container(
                         height: 30,
                         width: 30,
                         decoration: BoxDecoration(
@@ -1032,25 +1006,54 @@ class _ChattingViewState extends State<ChattingView> {
                           child: Image.asset('assets/images/send.png'),
                         ),
                       ),
-                      const SizedBox(
-                        width: 20,
-                      )
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  callApi(List<ChatMessage> messages) async {
+    List<ChatMessage> context = [];
+    context =
+        messages.length > 5 ? messages.sublist(messages.length - 5) : messages;
+    OpenAI.apiKey = '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';
+    // OpenAI.apiKey = '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'; //4
+    final chatCompletion = await OpenAI.instance.chat.create(
+        model: 'gpt-3.5-turbo',
+        //model: 'gpt-4',
+        messages: context
+            .map((e) => OpenAIChatCompletionChoiceMessageModel(
+                  role: e.messageType == "text"
+                      ? OpenAIChatMessageRole.user
+                      : OpenAIChatMessageRole.assistant,
+                  content: e.messageContent,
+                ))
+            .toList());
+    var abc = chatCompletion.choices.first.message.content;
+    setState(() {
+      messages.add(
+        ChatMessage(
+          messageType: "receiver",
+          dateTime: DateTime.now(),
+          messageContent: abc,
+        ),
+      );
+    });
   }
 }
 
 class ChatMessage {
   String messageContent;
   String messageType;
-  String dateTime;
+  DateTime dateTime;
 
   ChatMessage(
       {required this.messageContent,
