@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> chatGptResponse(mealType) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     final chatCompletion = await OpenAI.instance.chat.create(
       model: 'gpt-3.5-turbo',
