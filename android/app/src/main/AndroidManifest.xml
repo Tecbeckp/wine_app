@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bordeaux.app">
    <application
-        android:label="bordeaux"
-        android:name="${applicationName}"
+        android:label="Tylt"
+        android:name="${Tylt}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

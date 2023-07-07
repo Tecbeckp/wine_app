@@ -180,6 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 child: Image.asset(
                                   'assets/images/chatbot.png',
+                                  color: Colors.white,
                                   height: 27,
                                   width: 27,
                                 ),
@@ -637,7 +638,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     page: const LoginScreen());
                                               }),
                                         TextSpan(
-                                            text: ' for your medical records.',
+                                            text: ' to access cellar',
                                             style: TextStyle(
                                               fontSize: 11.sp,
                                               color: Colors.white,
@@ -661,7 +662,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chatGptResponse(mealType, wine) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     if (kDebugMode) {
       print(

@@ -690,7 +690,7 @@ class _SearchPagesState extends State<SearchPages> {
                                     showDetail = true;
                                   });
                                   OpenAI.apiKey =
-                                      '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';
+                                      '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';
                                   //OpenAI.apiKey = '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'; //4
                                   if (kDebugMode) {
                                     print(

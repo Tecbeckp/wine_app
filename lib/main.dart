@@ -174,7 +174,7 @@ class _MyAppState extends State<MyApp> {
         Get.put(GeneralController());
 
         return GetMaterialApp(
-          title: 'BORDEAUX',
+          title: 'Tylt',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,

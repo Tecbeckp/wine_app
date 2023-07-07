@@ -1,14 +1,13 @@
 // import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-
-class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
-
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-
-  AppBarWidget({Key? key, required this.title,}) : super(key: key);
+  AppBarWidget({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +15,8 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
       iconTheme: const IconThemeData(color: Colors.white),
       elevation: 0,
       titleSpacing: 10,
-      automaticallyImplyLeading:false,
-
+      automaticallyImplyLeading: false,
       title: Text(title),
-
     );
   }
 
@@ -27,13 +24,11 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-
-class AppBarWidgetWithoutTitle extends StatelessWidget with PreferredSizeWidget {
-
-
-
-
-  AppBarWidgetWithoutTitle({Key? key,}) : super(key: key);
+class AppBarWidgetWithoutTitle extends StatelessWidget
+    implements PreferredSizeWidget {
+  AppBarWidgetWithoutTitle({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +36,13 @@ class AppBarWidgetWithoutTitle extends StatelessWidget with PreferredSizeWidget 
       iconTheme: const IconThemeData(color: Colors.white),
       elevation: 0.5,
       titleSpacing: 10,
-      automaticallyImplyLeading:false,
-
-      actions:  [
+      automaticallyImplyLeading: false,
+      actions: [
         Row(
           children: [
-            Icon(Icons.menu,
-              color:Colors.white,
-
+            Icon(
+              Icons.menu,
+              color: Colors.white,
             ),
             SizedBox(
               width: 15,
@@ -62,5 +56,3 @@ class AppBarWidgetWithoutTitle extends StatelessWidget with PreferredSizeWidget 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
-

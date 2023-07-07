@@ -2,6 +2,7 @@ import 'dart:math' show pi;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -37,8 +38,12 @@ class _SplashScreenState extends State<SplashScreen>
       });
       await FirebaseMessaging.instance.getToken().then((value) {
         fcmToken.value = value!;
-        print("Token saved");
-        print(fcmToken.value);
+        if (kDebugMode) {
+          print("Token saved");
+        }
+        if (kDebugMode) {
+          print(fcmToken.value);
+        }
       });
       await FirebaseFirestore.instance
           .collection('users')
