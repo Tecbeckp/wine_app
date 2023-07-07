@@ -137,7 +137,8 @@ class _SplashScreenState extends State<SplashScreen>
                           transform: Matrix4.identity()
                             ..rotateZ(_animation.value),
                           child: Image.asset(
-                            'assets/images/logo_black.png',
+                            'assets/images/icon.png',
+                            color: Colors.black,
                             height: 75,
                             width: 75,
                           ),
@@ -150,7 +151,7 @@ class _SplashScreenState extends State<SplashScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'BORDEAUX',
+                        'Tylt',
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,

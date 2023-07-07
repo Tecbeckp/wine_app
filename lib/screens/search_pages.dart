@@ -15,9 +15,10 @@ import '../models/category_model.dart';
 
 class SearchPages extends StatefulWidget {
   final String symptom;
-  List<String> selectedTypes;
+  final List<String> selectedTypes;
 
-  SearchPages({Key? key, required this.symptom, required this.selectedTypes})
+  const SearchPages(
+      {Key? key, required this.symptom, required this.selectedTypes})
       : super(key: key);
 
   @override
@@ -267,7 +268,7 @@ class _SearchPagesState extends State<SearchPages> {
                                         height: 10,
                                       ),
                                       Row(
-                                        children: [
+                                        children: const [
                                           Text(
                                             'Buy Wines',
                                             style: TextStyle(
@@ -276,7 +277,7 @@ class _SearchPagesState extends State<SearchPages> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 20,
                                       ),
                                       Column(
@@ -318,7 +319,7 @@ class _SearchPagesState extends State<SearchPages> {
                                                       width: 100,
                                                       fit: BoxFit.fitHeight,
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 9,
                                                     ),
                                                     Expanded(
@@ -385,7 +386,7 @@ class _SearchPagesState extends State<SearchPages> {
                                                                             2),
                                                                 child: SizedBox(
                                                                   width: 40.w,
-                                                                  child: Text(
+                                                                  child: const Text(
                                                                       '2464 Royal Ln. Mesa... ',
                                                                       overflow:
                                                                           TextOverflow
@@ -425,7 +426,7 @@ class _SearchPagesState extends State<SearchPages> {
                                                                           BorderRadius.circular(
                                                                               5),
                                                                     ),
-                                                                    child: Center(
+                                                                    child: const Center(
                                                                         child: Text(
                                                                       '\$15',
                                                                       style: TextStyle(
@@ -450,11 +451,11 @@ class _SearchPagesState extends State<SearchPages> {
                                                                         BorderRadius.circular(
                                                                             3.6),
                                                                   ),
-                                                                  child: Center(
-                                                                      child:
-                                                                          Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
+                                                                  child:
+                                                                      const Center(
+                                                                          child:
+                                                                              Padding(
+                                                                    padding: EdgeInsets.only(
                                                                         top: 3,
                                                                         left: 3,
                                                                         bottom:
@@ -483,7 +484,7 @@ class _SearchPagesState extends State<SearchPages> {
                                         height: 20,
                                       ),
                                       Row(
-                                        children: [
+                                        children: const [
                                           Text(
                                             'Cabernet Sauvignon',
                                             style: TextStyle(
@@ -647,7 +648,7 @@ class _SearchPagesState extends State<SearchPages> {
                                         height: 35,
                                       ),
                                       Row(
-                                        children: [
+                                        children: const [
                                           Text(
                                             '1. Bordeaux, France',
                                             style: TextStyle(
@@ -827,17 +828,17 @@ class _SearchPagesState extends State<SearchPages> {
                                                     height: 20,
                                                     width: 20,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 7,
                                                   ),
-                                                  Text(
+                                                  const Text(
                                                     "Red",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 13),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 12,
                                                   ),
                                                   Image.asset(
@@ -845,17 +846,17 @@ class _SearchPagesState extends State<SearchPages> {
                                                     height: 20,
                                                     width: 20,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 7,
                                                   ),
-                                                  Text(
+                                                  const Text(
                                                     "Flavors",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 13),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 12,
                                                   ),
                                                   Image.asset(
@@ -863,10 +864,10 @@ class _SearchPagesState extends State<SearchPages> {
                                                     height: 20,
                                                     width: 20,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 7,
                                                   ),
-                                                  Text(
+                                                  const Text(
                                                     "5 Km",
                                                     style: TextStyle(
                                                         fontWeight:
@@ -898,14 +899,13 @@ class _SearchPagesState extends State<SearchPages> {
                                                           BorderRadius.circular(
                                                               8),
                                                     ),
-                                                    child: Center(
+                                                    child: const Center(
                                                         child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 3,
-                                                              left: 3,
-                                                              bottom: 3,
-                                                              right: 4),
+                                                      padding: EdgeInsets.only(
+                                                          top: 3,
+                                                          left: 3,
+                                                          bottom: 3,
+                                                          right: 4),
                                                       child: Icon(
                                                         Icons.favorite_border,
                                                         color:

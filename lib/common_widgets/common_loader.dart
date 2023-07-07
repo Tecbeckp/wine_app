@@ -15,23 +15,18 @@ class _CommonLoaderState extends State<CommonLoader>
   late AnimationController _contorllerCounterClock;
   late Animation<double> _animation;
 
-  late Animation<double> _animationCounterClock;
   @override
   void initState() {
     super.initState();
     _contorller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _contorllerCounterClock =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
     _animation = Tween<double>(
       begin: 0.0,
       end: 2 * pi,
     ).animate(_contorller);
-    _animationCounterClock = Tween<double>(
-      begin: 2 * pi,
-      end: 0.0,
-    ).animate(_contorllerCounterClock);
     _contorllerCounterClock.repeat();
     _contorller.repeat();
   }
@@ -52,7 +47,8 @@ class _CommonLoaderState extends State<CommonLoader>
             alignment: Alignment.center,
             transform: Matrix4.identity()..rotateZ(_animation.value),
             child: Image.asset(
-              'assets/images/logo_black.png',
+              'assets/images/icon.png',
+              color: Colors.black,
               height: 33,
               width: 33,
             ),

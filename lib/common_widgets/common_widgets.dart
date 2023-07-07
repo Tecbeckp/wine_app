@@ -1,12 +1,8 @@
 import 'package:bordeaux/common_widgets/page_transition.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../screens/group_chat_inbox.dart';
-import '../screens/general_setting_screen.dart';
 import '../screens/profile_screen.dart';
 import 'colors.dart';
-import 'drawer.dart';
 
 class CommonWidgets {
   static Widget CommonAppBar(VoidCallback onDrawerTap) {
@@ -17,7 +13,7 @@ class CommonWidgets {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: (){
+              onTap: () {
                 PageTransition.fadeInNavigation(page: ProfileScreen());
               },
               child: Row(
@@ -65,7 +61,8 @@ class CommonWidgets {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/logo_black.png',
+              'assets/images/icon.png',
+              color: Colors.black,
               height: 35,
               width: 35,
             ),
@@ -86,12 +83,14 @@ class CommonWidgets {
           height: 25,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 25,right: 25),
+          padding: const EdgeInsets.only(left: 25, right: 25),
           child: Text(
             'This site is protected by reCAPTCHA and the google privacy Policy and Terms of Service apply.',
             textAlign: TextAlign.center,
-            style:
-                TextStyle(color: AppColors.black.withOpacity(0.9), height: 1.9,fontSize: 11),
+            style: TextStyle(
+                color: AppColors.black.withOpacity(0.9),
+                height: 1.9,
+                fontSize: 11),
           ),
         ),
         const SizedBox(
@@ -140,13 +139,19 @@ class CommonWidgets {
                   size10(),
                   Text('Explore wine celler', style: textStyle()),
                   size10(),
-                  Text('Shop groceries or food', style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.black)),
+                  Text('Shop groceries or food',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black)),
                   size10(),
-                  Text('delivery', style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.black)),
+                  Text('delivery',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black)),
                   size10(),
                   Text('Sitemap', style: textStyle()),
                   size10(),

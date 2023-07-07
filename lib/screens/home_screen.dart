@@ -137,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 10,
                                 ),
                                 Image.asset(
-                                  'assets/images/logo_white.png',
+                                  'assets/images/icon.png',
+                                  color: Colors.white,
                                   height: 25,
                                   width: 25,
                                 ),
@@ -145,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 10,
                                 ),
                                 Text(
-                                  'BORDEAUX',
+                                  'Tylt',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -179,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       });
                                 },
                                 child: Image.asset(
-                                  'assets/images/chatbot.png',
+                                  'assets/images/chatbot_1.png',
                                   color: Colors.white,
                                   height: 27,
                                   width: 27,

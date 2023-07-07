@@ -2,7 +2,7 @@
     package="com.bordeaux.app">
    <application
         android:label="Tylt"
-        android:name="${Tylt}"
+       android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

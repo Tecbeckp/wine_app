@@ -2,6 +2,7 @@ import 'package:bordeaux/screens/login_screen.dart';
 import 'package:bordeaux/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -15,8 +16,6 @@ import 'helpers/constants.dart';
 import 'screens/group_chat_screen.dart';
 
 Future<void> _handleMessage(RemoteMessage message) async {
-  print("_handleMessage");
-  print(message);
   bool login = await getUserLoggedIn();
   if (login) {
     var userid = await getUserData();
@@ -41,8 +40,10 @@ Future<void> _handleMessage(RemoteMessage message) async {
 }
 
 Future<void> onSelectNotification(String? payload) async {
-  print("onSelectNotification");
-  print(payload);
+  if (kDebugMode) {
+    print("onSelectNotification");
+    print(payload);
+  }
 
   bool login = await getUserLoggedIn();
   if (login) {
@@ -131,7 +132,7 @@ Future<void> main() async {
   } */
 //  Stripe.publishableKey =
   //    "pk_test_51N8u8JAvobntCO1MbPMHxQhCk5liwtZV3yNANTx4ZkFIXBm1LUgFejyLM02EYiSrgzgU1QixFMoJVDPnV6IvVnIG00Fi2iaR7R";
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
