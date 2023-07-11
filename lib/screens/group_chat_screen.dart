@@ -63,7 +63,9 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         .collection("groups")
         .doc(groupId)
         .get();
-    List arrayData = documentSnapshot.data()!["members"];
+    List arrayData = documentSnapshot.data() == null
+        ? []
+        : documentSnapshot.data()!["members"];
     if (kDebugMode) {
       print('Array data: $arrayData');
     }
@@ -292,7 +294,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                     style: ListTileStyle.drawer,
                                     selectedTileColor: Colors.transparent,
                                     leading: Image.asset(
-                                      'assets/images/chat.png',
+                                      'assets/images/icon.png',
+                                      color: Colors.black,
                                     ),
                                     subtitle: Row(
                                       children: [

@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showOptions = false;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final FocusNode _focusNode = FocusNode();
   var loggedInFree = 0;
   bool groupAvailable = false;
 
@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
     generalController.backgroundImageCounter(
         generateRandomNumber(0, backgroundImages.length));
     super.initState();
-    print(loggedInGlobal.value);
   }
 
   @override
@@ -145,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                Text(
+                                const Text(
                                   'Tylt',
                                   style: TextStyle(
                                       color: Colors.white,
@@ -158,34 +157,36 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Row(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: context,
-                                      shape: const RoundedRectangleBorder(
-                                        // <-- SEE HERE
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(15.0),
-                                        ),
+                              loggedInGlobal.value
+                                  ? InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(15.0),
+                                              ),
+                                            ),
+                                            builder: (context) {
+                                              return Wrap(children: [
+                                                StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter setState) {
+                                                  return ChattingView();
+                                                }),
+                                              ]);
+                                            });
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/chatbot_1.png',
+                                        color: Colors.white,
+                                        height: 27,
+                                        width: 27,
                                       ),
-                                      builder: (context) {
-                                        return Wrap(children: [
-                                          StatefulBuilder(builder:
-                                              (BuildContext context,
-                                                  StateSetter setState) {
-                                            return ChattingView();
-                                          }),
-                                        ]);
-                                      });
-                                },
-                                child: Image.asset(
-                                  'assets/images/chatbot_1.png',
-                                  color: Colors.white,
-                                  height: 27,
-                                  width: 27,
-                                ),
-                              ),
+                                    )
+                                  : SizedBox.shrink(),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -663,11 +664,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chatGptResponse(mealType, wine) async {
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     //OpenAI.apiKey = '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'; //4
     if (kDebugMode) {
       print(
-        "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this my meal ('$mealType')",
+        "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this meal ('$mealType')",
       );
     }
     final chatCompletion = await OpenAI.instance.chat.create(
@@ -676,7 +677,7 @@ class _HomeScreenState extends State<HomeScreen> {
       messages: [
         OpenAIChatCompletionChoiceMessageModel(
           content:
-              "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this my meal ('$mealType')",
+              "you are a top sommelier for a high end restaurant, recommend a few '$wine' wines based on this meal ('$mealType')",
           role: OpenAIChatMessageRole.user,
         ),
       ],
@@ -765,6 +766,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(7),
             ),
           ),
+          // countries: ["USA"],
 
           // inputDecoration: InputDecoration(
           //   border: InputBorder.none,
@@ -773,10 +775,6 @@ class _HomeScreenState extends State<HomeScreen> {
           debounceTime: 800,
           isLatLngRequired: true,
           getPlaceDetailWithLatLng: (prediction) {
-            print('Fahad this is enter location1');
-            print(
-              "placeDetails" + prediction.lng.toString(),
-            );
             // address=prediction.description.toString();
             // print(address);
             print(
@@ -784,9 +782,14 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           itmClick: (prediction) {
-            locationController.text = prediction.description!;
+            print("sdsx");
+            print(prediction.description);
+
+            locationController.text =
+                prediction.structuredFormatting!.mainText!;
             locationController.selection = TextSelection.fromPosition(
-                TextPosition(offset: prediction.description!.length));
+                TextPosition(
+                    offset: prediction.structuredFormatting!.mainText!.length));
           }
           // default 600 ms ,
           ),
@@ -830,6 +833,22 @@ class _ChattingViewState extends State<ChattingView> {
     'Exercises',
     'Food/ingredients',
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      messages.add(
+        ChatMessage(
+          messageType: "receiver",
+          dateTime: DateTime.now(),
+          messageContent:
+              "Hello ${userData.displayName}, How can I be of service to you",
+        ),
+      );
+      // FocusScope.of(context).requestFocus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -988,7 +1007,7 @@ class _ChattingViewState extends State<ChattingView> {
                         setState(() {
                           messages.add(
                             ChatMessage(
-                              messageType: "receivers",
+                              messageType: "sender",
                               dateTime: DateTime.now(),
                               messageContent: textFieldController.text,
                             ),
@@ -1026,7 +1045,7 @@ class _ChattingViewState extends State<ChattingView> {
     List<ChatMessage> context = [];
     context =
         messages.length > 5 ? messages.sublist(messages.length - 5) : messages;
-    OpenAI.apiKey = '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';
+    OpenAI.apiKey = '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';
     // OpenAI.apiKey = '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'; //4
     final chatCompletion = await OpenAI.instance.chat.create(
         model: 'gpt-3.5-turbo',

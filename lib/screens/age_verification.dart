@@ -180,7 +180,7 @@ class _AgeVerificationState extends State<AgeVerification> {
                                               print(pickedDate);
                                             } //pickedDate output format => 2021-03-10 00:00:00.000
                                             var formattedDate =
-                                                DateFormat('yyyy-MM-dd')
+                                                DateFormat('MM-dd-yyyy')
                                                     .format(pickedDate);
                                             selectedDate = DateTime
                                                 .fromMicrosecondsSinceEpoch(
@@ -268,7 +268,7 @@ class _AgeVerificationState extends State<AgeVerification> {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                         ),
-                                        child: Center(
+                                        child: const Center(
                                           child: Padding(
                                             padding: EdgeInsets.all(13),
                                             child: Text(

@@ -67,7 +67,8 @@ class _SearchPagesState extends State<SearchPages> {
                     width: 10,
                   ),
                   Image.asset(
-                    'assets/images/logo_white.png',
+                    'assets/images/icon.png',
+                    color: Colors.white,
                     height: 25,
                     width: 25,
                   ),
@@ -75,7 +76,7 @@ class _SearchPagesState extends State<SearchPages> {
                     width: 10,
                   ),
                   const Text(
-                    'BORDEAUX',
+                    'Tylt',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -691,7 +692,7 @@ class _SearchPagesState extends State<SearchPages> {
                                     showDetail = true;
                                   });
                                   OpenAI.apiKey =
-                                      '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';
+                                      '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';
                                   //OpenAI.apiKey = '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'; //4
                                   if (kDebugMode) {
                                     print(

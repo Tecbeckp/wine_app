@@ -19,7 +19,8 @@ class CommonWidgets {
               child: Row(
                 children: [
                   Image.asset(
-                    'assets/images/logo_white.png',
+                    'assets/images/icon.png',
+                    color: Colors.white,
                     height: 25,
                     width: 25,
                   ),
@@ -27,7 +28,7 @@ class CommonWidgets {
                     width: 10,
                   ),
                   const Text(
-                    'BORDEAUX',
+                    'Tylt',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
